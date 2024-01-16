@@ -6,12 +6,17 @@ import cors from 'cors';
 import {
   registerValidation,
   loginValidation,
-  postCreateValidation
+  postCreateValidation,
+  commentCreateValidation
 } from './validations/validations.js';
 
 import { handleValidationErrors, checkAuth } from './utils/index.js';
 
-import { UserController, PostController } from './controllers/index.js';
+import {
+  UserController,
+  PostController,
+  CommentController
+} from './controllers/index.js';
 
 mongoose
   .connect(
@@ -75,6 +80,17 @@ app.patch(
   checkAuth,
   handleValidationErrors,
   PostController.update
+);
+
+app.get('/comments', CommentController.getAll);
+app.get('/comments/:id', CommentController.getOnlyPostAll);
+app.delete('/comments/:id', checkAuth, CommentController.remove);
+app.post(
+  '/comments',
+  checkAuth,
+  commentCreateValidation,
+  handleValidationErrors,
+  CommentController.create
 );
 
 app.listen(4444, (err) => {

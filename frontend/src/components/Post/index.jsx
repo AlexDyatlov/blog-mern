@@ -12,6 +12,7 @@ import { PostSkeleton } from './Skeleton';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 import { fetchRemovePost } from '../../redux/slices/post';
+import { fetchRemoveComments } from '../../redux/slices/comment';
 
 export const Post = ({
   id,
@@ -36,6 +37,7 @@ export const Post = ({
   const onClickRemove = () => {
     if (window.confirm('Вы действительно удалить пост ?')) {
       dispatch(fetchRemovePost(id))
+      dispatch(fetchRemoveComments(id))
     }
   };
 

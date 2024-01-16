@@ -18,3 +18,7 @@ export const postCreateValidation = [
   body('tags', 'Неверный формат тэгов').optional().isString(),
   body('imageUrl', 'Неверная ссылка на изображение').optional().isString()
 ];
+
+export const commentCreateValidation = [
+  body('text', 'Комментарий должен быть минимум 5 символов').isLength({ min: 5 }).isString()
+]
