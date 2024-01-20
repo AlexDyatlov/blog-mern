@@ -18,7 +18,20 @@ export const getLastTags = async (req, res) => {
 
 export const getAll = async (req, res) => {
   try {
-    const posts = await PostModel.find().populate('user').exec();
+    const sortQuery = req.query;
+    let sort = {}; 
+
+    if (sortQuery.order === '2') {
+      sort = { commentsCount: "desc" }
+    } else if (sortQuery.order === '1') {
+      sort = { commentsCount: "asc" }
+    } else if (sortQuery.order === '3') {
+      sort = {createdAt: "desc"}
+    } else {
+      sort = null;
+    }
+    
+    const posts = await PostModel.find().sort(sort).populate('user').exec();
 
     res.json(posts);
   } catch (err) {

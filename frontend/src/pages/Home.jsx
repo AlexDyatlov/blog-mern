@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import Tabs from '@mui/material/Tabs';
@@ -17,26 +17,38 @@ export const Home = () => {
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags } = useSelector((state) => state.posts);
   const { comments } = useSelector((state) => state.comments);
+  const [activeTab, setActiveTab] = useState(false);
+  let [order, setOrder] = useState({});
 
   const isPostsLoading = posts.status === 'loading';
   const isTagsLoading = tags.status === 'loading';
   const isCommentsLoading = comments.status === 'loading';
 
+  const handleSortPost = (value) => {
+    if (value === 'new') {
+      setActiveTab((prevValue) => prevValue === 0  ? false : 0)
+      setOrder((prevValue) => (prevValue.order === '3' ? '' : { order: '3' }));
+    } else if (value === 'popular') {
+      setActiveTab(1)
+      setOrder((prevValue) => (prevValue.order === '2' ? { order: '1' } : { order: '2' }));
+    }
+  };
+
   useEffect(() => {
-    dispatch(fetchPosts());
+    dispatch(fetchPosts(order));
     dispatch(fetchTags());
     dispatch(fetchComments());
-  }, []);
+  }, [order]);
 
   return (
     <>
       <Tabs
         style={{ marginBottom: 15 }}
-        value={0}
+        value={activeTab}
         aria-label="basic tabs example"
       >
-        <Tab label="Новые" />
-        <Tab label="Популярные" />
+        <Tab label="Новые" onClick={() => handleSortPost('new')} />
+        <Tab label="Популярные" onClick={() => handleSortPost('popular')} />
       </Tabs>
       <Grid container spacing={4}>
         <Grid xs={8} item>
