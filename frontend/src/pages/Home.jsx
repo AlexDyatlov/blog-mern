@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
@@ -13,12 +14,16 @@ import { fetchPosts, fetchTags } from '../redux/slices/post';
 import { fetchComments } from '../redux/slices/comment';
 
 export const Home = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const isMounted = useRef(false);
+
   const userData = useSelector((state) => state.auth.data);
   const { posts, tags } = useSelector((state) => state.posts);
   const { comments } = useSelector((state) => state.comments);
   const [activeTab, setActiveTab] = useState(false);
-  let [order, setOrder] = useState({});
+  let [order, setOrder] = useState('');
 
   const isPostsLoading = posts.status === 'loading';
   const isTagsLoading = tags.status === 'loading';
@@ -26,19 +31,53 @@ export const Home = () => {
 
   const handleSortPost = (value) => {
     if (value === 'new') {
-      setActiveTab((prevValue) => prevValue === 0  ? false : 0)
-      setOrder((prevValue) => (prevValue.order === '3' ? '' : { order: '3' }));
+      setActiveTab((prevValue) => (prevValue === 0 ? false : 0));
+      setOrder((prevValue) => (prevValue === '3' ? '' : '3'));
     } else if (value === 'popular') {
-      setActiveTab(1)
-      setOrder((prevValue) => (prevValue.order === '2' ? { order: '1' } : { order: '2' }));
+      setActiveTab(1);
+      setOrder((prevValue) => (prevValue === '2' ? '1' : '2'));
     }
   };
 
+  // Если изменили параметры и был первый рендер
   useEffect(() => {
-    dispatch(fetchPosts(order));
+    if (isMounted.current) {
+      const urlParams = new URLSearchParams(`order=${order}`);
+      const params = Object.fromEntries(urlParams.entries());
+
+      if (order !== '') {
+        navigate(`?order=${order}`);
+      } else {
+        navigate('/');
+      }
+
+      dispatch(fetchPosts(params));
+    }
+  }, [order]);
+
+  // при первом рендере
+  useEffect(() => {
+    if (location.search) {
+      const urlParams = new URLSearchParams(location.search);
+      const orderFromUrl = urlParams.get('order');
+
+      setOrder(orderFromUrl);
+
+      if (orderFromUrl === '2' || orderFromUrl === '1') {
+        setActiveTab(1);
+      } else if (orderFromUrl === '3') {
+        setActiveTab((prevValue) => (prevValue === 0 ? false : 0));
+      }
+    }
+
+    isMounted.current = true;
+  }, []);
+
+  useEffect(() => {
+    dispatch(fetchPosts());
     dispatch(fetchTags());
     dispatch(fetchComments());
-  }, [order]);
+  }, []);
 
   return (
     <>
