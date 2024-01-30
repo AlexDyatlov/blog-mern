@@ -16,6 +16,18 @@ export const getLastTags = async (req, res) => {
   }
 };
 
+export const getPostsForTag = async (req, res) => {
+  try {
+    const tag = req.params.tag;
+    const posts = await PostModel.find({ tags: tag }).populate('user').exec();
+
+    res.json(posts);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: 'Не удалось получить посты по тегу' });
+  }
+};
+
 export const getAll = async (req, res) => {
   try {
     const sortQuery = req.query;
