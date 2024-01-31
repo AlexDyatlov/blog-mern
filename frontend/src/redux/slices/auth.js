@@ -16,6 +16,21 @@ export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async (params) =
   return data;
 });
 
+const generatePendingReducer = (state) => {
+  state.status = 'loading';
+  state.data = null;
+}
+
+const generateFulfilledReducer = (state, actions) => {
+  state.status = 'loaded';
+  state.data = actions.payload;
+}
+
+const generateRejectedReducer = (state) => {
+  state.status = 'error';
+  state.data = null;
+}
+
 const initialState = {
   data: null,
   status: 'loading'
@@ -29,43 +44,17 @@ const authSlice = createSlice({
       state.data = null;
     }
   },
-  extraReducers: {
-    [fetchLogin.pending]: (state) => {
-      state.status = 'loading';
-      state.data = null;
-    },
-    [fetchLogin.fulfilled]: (state, actions) => {
-      state.status = 'loaded';
-      state.data = actions.payload;
-    },
-    [fetchLogin.rejected]: (state) => {
-      state.status = 'error';
-      state.data = null;
-    },
-    [fetchAuthMe.pending]: (state) => {
-      state.status = 'loading';
-      state.data = null;
-    },
-    [fetchAuthMe.fulfilled]: (state, actions) => {
-      state.status = 'loaded';
-      state.data = actions.payload;
-    },
-    [fetchAuthMe.rejected]: (state) => {
-      state.status = 'error';
-      state.data = null;
-    },
-    [fetchRegister.pending]: (state) => {
-      state.status = 'loading';
-      state.data = null;
-    },
-    [fetchRegister.fulfilled]: (state, actions) => {
-      state.status = 'loaded';
-      state.data = actions.payload;
-    },
-    [fetchRegister.rejected]: (state) => {
-      state.status = 'error';
-      state.data = null;
-    }
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchLogin.pending, generatePendingReducer)
+      .addCase(fetchLogin.fulfilled, generateFulfilledReducer)
+      .addCase(fetchLogin.rejected, generateRejectedReducer)
+      .addCase(fetchAuthMe.pending, generatePendingReducer)
+      .addCase(fetchAuthMe.fulfilled, generateFulfilledReducer)
+      .addCase(fetchAuthMe.rejected, generateRejectedReducer)
+      .addCase(fetchRegister.pending, generatePendingReducer)
+      .addCase(fetchRegister.fulfilled, generateFulfilledReducer)
+      .addCase(fetchRegister.rejected, generateRejectedReducer)
   }
 });
 

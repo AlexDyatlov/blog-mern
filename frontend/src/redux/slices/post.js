@@ -26,6 +26,27 @@ export const fetchPostsForTag = createAsyncThunk(
   }
 );
 
+const generatePendingReducer =
+  (stateSlice = 'posts') =>
+  (state) => {
+    state[stateSlice].items = [];
+    state[stateSlice].status = 'loading';
+  };
+
+const generateFulfilledReducer =
+  (stateSlice = 'posts') =>
+  (state, actions) => {
+    state[stateSlice].items = actions.payload;
+    state[stateSlice].status = 'loaded';
+  };
+
+const generateRejectedReducer =
+  (stateSlice = 'posts') =>
+  (state) => {
+    state[stateSlice].items = [];
+    state[stateSlice].status = 'error';
+  };
+
 const initialState = {
   posts: {
     items: [],
@@ -41,52 +62,26 @@ const postSlice = createSlice({
   name: 'posts',
   initialState,
   reducers: {},
-  extraReducers: {
-    // Получение постов
-    [fetchPosts.pending]: (state) => {
-      state.posts.items = [];
-      state.posts.status = 'loading';
-    },
-    [fetchPosts.fulfilled]: (state, actions) => {
-      state.posts.items = actions.payload;
-      state.posts.status = 'loaded';
-    },
-    [fetchPosts.rejected]: (state) => {
-      state.posts.items = [];
-      state.posts.status = 'error';
-    },
-    // Получение постов по тегу
-    [fetchPostsForTag.pending]: (state) => {
-      state.posts.items = [];
-      state.posts.status = 'loading';
-    },
-    [fetchPostsForTag.fulfilled]: (state, actions) => {
-      state.posts.items = actions.payload;
-      state.posts.status = 'loaded';
-    },
-    [fetchPostsForTag.rejected]: (state) => {
-      state.posts.items = [];
-      state.posts.status = 'error';
-    },
-    // Получение тегов
-    [fetchTags.pending]: (state) => {
-      state.tags.items = [];
-      state.tags.status = 'loading';
-    },
-    [fetchTags.fulfilled]: (state, actions) => {
-      state.tags.items = actions.payload;
-      state.tags.status = 'loaded';
-    },
-    [fetchTags.rejected]: (state) => {
-      state.tags.items = [];
-      state.tags.status = 'error';
-    },
-    // Удаление постов
-    [fetchRemovePost.pending]: (state, actions) => {
-      state.posts.items = state.posts.items.filter(
-        (obj) => obj._id !== actions.meta.arg
-      );
-    }
+  extraReducers: (builder) => {
+    builder
+      // Получение постов
+      .addCase(fetchPosts.pending, generatePendingReducer())
+      .addCase(fetchPosts.fulfilled, generateFulfilledReducer())
+      .addCase(fetchPosts.rejected, generateRejectedReducer())
+      // Получение постов по тегу
+      .addCase(fetchPostsForTag.pending, generatePendingReducer())
+      .addCase(fetchPostsForTag.fulfilled, generateFulfilledReducer())
+      .addCase(fetchPostsForTag.rejected, generateRejectedReducer())
+      // Получение тегов
+      .addCase(fetchTags.pending, generatePendingReducer('tags'))
+      .addCase(fetchTags.fulfilled, generateFulfilledReducer('tags'))
+      .addCase(fetchTags.rejected, generateRejectedReducer('tags'))
+      // Удаление постов
+      .addCase(fetchRemovePost.pending, (state, actions) => {
+        state.posts.items = state.posts.items.filter(
+          (obj) => obj._id !== actions.meta.arg
+        );
+      });
   }
 });
 

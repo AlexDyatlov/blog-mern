@@ -148,7 +148,7 @@ export const AddPost = () => {
       <TextField
         classes={{ root: styles.tags }}
         variant="standard"
-        placeholder="Тэги"
+        placeholder="Теги"
         value={tags}
         onChange={(e) => setTags(e.target.value)}
         fullWidth

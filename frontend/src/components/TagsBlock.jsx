@@ -13,12 +13,12 @@ import { Link } from 'react-router-dom';
 
 export const TagsBlock = ({ items, isLoading = true }) => {
   return (
-    <SideBlock title="Тэги">
+    <SideBlock title="Теги">
       <List>
         {(isLoading ? [...Array(5)] : items).map((name, i) => (
           <Link
             style={{ textDecoration: 'none', color: 'black' }}
-            to={`/tags/${name}`}
+            to={`/tag/${name}`}
             key={i}
           >
             <ListItem disablePadding>

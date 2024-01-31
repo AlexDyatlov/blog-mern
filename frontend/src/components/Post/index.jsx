@@ -38,7 +38,10 @@ export const Post = ({
   const onClickRemove = () => {
     if (window.confirm('Вы действительно удалить пост ?')) {
       dispatch(fetchRemovePost(id))
-      dispatch(fetchRemoveComments(id))
+
+      if (commentsCount > 0) {
+        dispatch(fetchRemoveComments(id))
+      }
     }
   };
 

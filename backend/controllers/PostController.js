@@ -34,9 +34,9 @@ export const getAll = async (req, res) => {
     let sort = {}; 
 
     if (sortQuery.order === '2') {
-      sort = { commentsCount: "desc" }
+      sort = { viewsCount: "desc" }
     } else if (sortQuery.order === '1') {
-      sort = { commentsCount: "asc" }
+      sort = { viewsCount: "asc" }
     } else if (sortQuery.order === '3') {
       sort = {createdAt: "desc"}
     } else {
@@ -106,7 +106,7 @@ export const create = async (req, res) => {
       title: req.body.title,
       text: req.body.text,
       imageUrl: req.body.imageUrl,
-      tags: req.body.tags.split(','),
+      tags: req.body.tags.split(',').map(tag => tag.trim()),
       user: req.userId
     });
 
