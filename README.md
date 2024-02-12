@@ -45,7 +45,7 @@
 #### Проектирование и тестирование API:
     - Insomnia REST
 <p align="center">
-  <img src="https://github.com/AlexDyatlov/blog-mern/blob/main/public/insomnia-scheme.png">
+  <img src="https://github.com/AlexDyatlov/blog-mern/blob/main/frontend/public/insomnia-scheme.png">
 </p>
 
 ### <a name="functional-backend"></a> Реализованный функционал backend:
@@ -95,5 +95,5 @@
 ### <a name="images"></a> Изображение готового проекта:
 #### Главная страница
 <p align="center">
-  <img src="https://github.com/AlexDyatlov/blog-mern/blob/main/public/blog-mern.png">
+  <img src="https://github.com/AlexDyatlov/blog-mern/blob/main/frontend/public/insomnia-scheme.png">
 </p>
