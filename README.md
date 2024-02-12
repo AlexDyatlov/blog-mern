@@ -95,5 +95,5 @@
 ### <a name="images"></a> Изображение готового проекта:
 #### Главная страница
 <p align="center">
-  <img src="https://github.com/AlexDyatlov/blog-mern/blob/main/frontend/public/insomnia-scheme.png">
+  <img src="https://github.com/AlexDyatlov/blog-mern/blob/main/frontend/public/blog-mern.png">
 </p>
